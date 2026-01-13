@@ -15,10 +15,10 @@ class FreeFlow_Agent:
     - name: human-readable agent name
     """
 
-    def __init__(self, logger, api_var_name: str = "GROQ_API_KEY", name: str = "FreeFlowAgent") -> None:
+    def __init__(self, logger, name: str = "FreeFlowAgent") -> None:
         self.logger = logger
         self.name = name
-        self.api_var_name = api_var_name
+        self.api_var_name = "GROQ_API_KEY"
         self.api_key: Optional[str] = None
         self.client: Optional[FreeFlowClient] = None
         self.setup()

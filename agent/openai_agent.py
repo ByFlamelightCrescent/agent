@@ -15,10 +15,10 @@ class OpenAI_Agent:
     - name: human-readable agent name
     """
 
-    def __init__(self, logger, api_var_name: str = "OPENAI_API_KEY", name: str = "OpenAIAgent") -> None:
+    def __init__(self, logger, name: str = "OpenAIAgent") -> None:
         self.logger = logger
         self.name = name
-        self.api_var_name = api_var_name
+        self.api_var_name = "OPENAI_API_KEY"
         self.api_key: Optional[str] = None
         self.client: Optional[OpenAI] = None
         self.setup()

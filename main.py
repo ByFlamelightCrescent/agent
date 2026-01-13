@@ -19,7 +19,7 @@ def configure_logging(name: str = "agent") -> logging.Logger:
 def main():
     logger = configure_logging("agent_main")
 
-    factory = AgentFactory("freeflow", logger=logger, api_var_name="GROQ_API_KEY", name="MyAgent")
+    factory = AgentFactory(logger=logger, name="MyAgent")
     my_agent = factory.create()
 
     response = my_agent.get_response()

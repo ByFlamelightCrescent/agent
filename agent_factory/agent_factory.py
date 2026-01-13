@@ -5,6 +5,8 @@ Usage:
     factory = AgentFactory("openai", logger)
     agent = factory.create()
 """
+import os
+
 from typing import Optional
 
 # Import the concrete agent classes from the package
@@ -20,10 +22,9 @@ class AgentFactory:
     forwarded to the created agent instance.
     """
 
-    def __init__(self, agent_type: str, logger, api_var_name: str = "OPENAI_API_KEY", name: Optional[str] = None) -> None:
-        self.agent_type = (agent_type or "").strip().lower()
+    def __init__(self, logger, name: Optional[str] = None) -> None:
+        self.agent_type = (os.getenv("AGENT_TYPE") or "").strip().lower()
         self.logger = logger
-        self.api_var_name = api_var_name
         self.name = name
 
     def create(self):
@@ -33,9 +34,9 @@ class AgentFactory:
             ValueError: if an unknown agent_type is requested.
         """
         if self.agent_type in ("openai", "openai_agent"):
-            return OpenAI_Agent(logger=self.logger, api_var_name=self.api_var_name, name=self.name or "OpenAIAgent")
+            return OpenAI_Agent(logger=self.logger, name=self.name or "OpenAIAgent")
 
         if self.agent_type in ("freeflow", "freeflow_agent"):
-            return FreeFlow_Agent(logger=self.logger, api_var_name=self.api_var_name, name=self.name or "FreeflowAgent")
+            return FreeFlow_Agent(logger=self.logger, name=self.name or "FreeflowAgent")
 
         raise ValueError(f"Unknown agent type: {self.agent_type!r}")
