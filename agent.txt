@@ -11,7 +11,7 @@ GOAL:
 Confirm connection by responding to the message.
 
 CONTEXT:
-This Black Leader to Swift Vision, confirm comms.
+This is Black Leader to Swift Vision, confirm comms.
 
 STOP CONDITION:
 You've written three lines.

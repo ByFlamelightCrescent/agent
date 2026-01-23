@@ -1,12 +1,12 @@
-"""OpenAI-specific agent implementation."""
+"""GenAI-specific agent implementation."""
+from google import genai
 from dotenv import load_dotenv
-from openai import OpenAI
 import os
 from typing import Optional
 
 
-class OpenAI_Agent:
-    """Agent that uses the OpenAI client.
+class Gemini_Agent:
+    """Agent that uses the Gemini client.
 
     Parameters
     - logger: logging.Logger
@@ -14,25 +14,25 @@ class OpenAI_Agent:
     - name: human-readable agent name
     """
 
-    def __init__(self, logger, name: str = "OpenAIAgent") -> None:
+    def __init__(self, logger, name: str = "GenAIAgent") -> None:
         self.logger = logger
         self.name = name
-        self.api_var_name = "OPENAI_API_KEY"
+        self.api_var_name = "GEMINI_API_KEY"
         self.api_key: Optional[str] = None
-        self.client: Optional[OpenAI] = None
+        self.client: Optional[genai.Client] = None
         self.setup()
 
     def setup(self) -> Optional[str]:
-        """Load .env and set up the OpenAI client if an API key is present."""
+        """Load .env and set up the Gemini client if an API key is present."""
         load_dotenv()
         api_key = os.environ.get(self.api_var_name)
         if api_key:
             self.logger.info(f"{self.api_var_name} found (value hidden)")
             self.api_key = api_key
             try:
-                self.client = OpenAI(api_key=api_key)
+                self.client = genai.Client(api_key=api_key)
             except Exception:
-                self.logger.exception("Failed to create OpenAI client")
+                self.logger.exception("Failed to create Gemini client")
                 self.client = None
         elif api_key == "":
             # Key present but empty
@@ -51,14 +51,13 @@ class OpenAI_Agent:
         even when an API key is absent or the API client call fails.
         """
         if not self.client:
-            self.logger.warning("No OpenAI client configured; returning placeholder response")
+            self.logger.warning("No Gemini client configured; returning placeholder response")
             return "No API key configured."
 
         try:
-            response = self.client.responses.create(
-                model="gpt-4o",
-                instructions="You are a coding assistant that talks like a pirate.",
-                input=prompt,
+            response = self.client.models.generate_content(
+                model="gemini-3-flash-preview",
+                contents=prompt,
             )
 
             # Try a few common response shapes
@@ -72,5 +71,5 @@ class OpenAI_Agent:
                 return str(response)
 
         except Exception as exc:
-            self.logger.exception("OpenAI API call failed")
+            self.logger.exception("GenAI API call failed")
             return f"API call failed: {exc}"
